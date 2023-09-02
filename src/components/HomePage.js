@@ -205,17 +205,7 @@ export const HomePage = (props) => {
                     Logout
                 </Button>
             </div>
-            <FormControl>
-                <InputLabel>Page Size</InputLabel>
-                <Select
-                    value={pageSize}
-                    onChange={handlePageSizeChange}
-                >
-                    <MenuItem value={1}>1</MenuItem>
-                    <MenuItem value={10}>10</MenuItem>
-                    <MenuItem value={20}>20</MenuItem>
-                </Select>
-            </FormControl>
+            <br />
             <TableContainer component={Paper}>
                 <Table>
                     <TableHead>
@@ -261,6 +251,20 @@ export const HomePage = (props) => {
                         </Button>
                     </div>
                 )}
+            </div>
+            <br />
+            <div>
+                <FormControl>
+                    <InputLabel>Page Size</InputLabel>
+                    <Select
+                        value={pageSize}
+                        onChange={handlePageSizeChange}
+                    >
+                        <MenuItem value={1}>1</MenuItem>
+                        <MenuItem value={10}>10</MenuItem>
+                        <MenuItem value={20}>20</MenuItem>
+                    </Select>
+                </FormControl>
             </div>
         </div>
     );
