@@ -36,13 +36,33 @@ input {
   border-radius: 10px;
 }
 
-button {
+.login-register-btn {
   border: none;
   background-color: white;
   padding: 20px;
   border-radius: 10px;
   cursor: pointer;
   color: #7439db;
+}
+
+.pagination-btn-primary {
+  border: none;
+  background-color: white;
+  color: rgb(0, 255, 60);
+  padding: 12px;
+  margin: 5px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.pagination-btn-default {
+  border: none;
+  background-color: white;
+  color: rgb(255, 132, 0);
+  padding: 12px;
+  margin: 5px;
+  border-radius: 10px;
+  cursor: pointer;
 }
 
 .link-btn {

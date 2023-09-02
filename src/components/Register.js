@@ -60,7 +60,7 @@ export const Register = (props) => {
                 <input value={username} onChange={(e) => setUsername(e.target.value)} type="text" placeholder="username" id="username" name="username" />
                 <label htmlFor="password">password</label>
                 <input value={pass} onChange={(e) => setPass(e.target.value)} type="password" placeholder="********" id="password" name="password" />
-                <button type="submit">Register</button>
+                <button className="login-register-btn" type="submit">Register</button>
             </form>
             <button className="link-btn" onClick={() => props.onRouteChange('login')}>Already have an account? Login here.</button>
         </div>

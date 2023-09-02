@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Login } from './components/Login';
 import { Register } from './components/Register';
+import { HomePage } from './components/HomePage';
 import './App.css';
 
 
@@ -49,6 +50,9 @@ class App extends Component {
 					:
 					route === 'register' ?
 						<Register loadUser={this.loadUser} onRouteChange={this.onRouteChange} />
+					:
+					route === 'home' ?
+						<HomePage state={this.state} onRouteChange={this.onRouteChange} />
 					:
 					<></>
 				}
