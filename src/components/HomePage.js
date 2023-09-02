@@ -71,7 +71,7 @@ export const HomePage = (props) => {
     return (
         <div>
             <Button 
-                style={{ position: 'absolute', top: 20, right: 20 }} 
+                style={{ zIndex: 10, position: 'absolute', top: 20, right: 20 }} 
                 variant="contained" color="secondary" 
                 onClick={() => props.onRouteChange('login')}
             >
