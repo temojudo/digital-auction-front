@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Login } from './components/Login';
 import { Register } from './components/Register';
 import { HomePage } from './components/HomePage';
+import { AuctionPage } from './components/AuctionPage';
 import './App.css';
 
 
@@ -62,7 +63,7 @@ class App extends Component {
 						<HomePage state={this.state} onRouteChange={this.onRouteChange} onAuctionClicked={this.onAuctionClicked} />
 					:
 					route === 'auction' ?
-						<></>
+						<AuctionPage state={this.state} onRouteChange={this.onRouteChange} onAuctionClicked={this.onAuctionClicked} />
 					:
 					<></>
 				}
