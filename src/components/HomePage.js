@@ -220,7 +220,7 @@ export const HomePage = (props) => {
                     </TableHead>
                     <TableBody>
                         {data.auctionDashboardViews.map((item) => (
-                            <TableRow key={item.id}>
+                            <TableRow key={item.id} onClick={() => props.onAuctionClicked(item.id)}>
                                 <TableCell>{item.id}</TableCell>
                                 <TableCell>{item.title}</TableCell>
                                 <TableCell>{item.creationDate}</TableCell>

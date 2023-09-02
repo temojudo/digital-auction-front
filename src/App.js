@@ -7,6 +7,7 @@ import './App.css';
 
 const intialState = {
     route: 'login',
+	auctionId: 0,
 	firstname: '',
 	lastname: '',
 	username: '',
@@ -40,6 +41,12 @@ class App extends Component {
         this.setState({ input: event.target.value });
 	};
 
+	onAuctionClicked = (auctionId) => {
+        this.setState({ auctionId: auctionId });
+
+		this.onRouteChange('auction')
+	};
+
 	render() {
 		const { route } = this.state;
 		return (
@@ -52,7 +59,10 @@ class App extends Component {
 						<Register loadUser={this.loadUser} onRouteChange={this.onRouteChange} />
 					:
 					route === 'home' ?
-						<HomePage state={this.state} onRouteChange={this.onRouteChange} />
+						<HomePage state={this.state} onRouteChange={this.onRouteChange} onAuctionClicked={this.onAuctionClicked} />
+					:
+					route === 'auction' ?
+						<></>
 					:
 					<></>
 				}
