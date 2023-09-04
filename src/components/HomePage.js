@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -25,6 +26,8 @@ export const HomePage = (props) => {
 
     const [pageSize, setPageSize] = useState(5);
     const [pageNumber, setPageNumber] = useState(1);
+
+    const navigate = useNavigate();
 
     const handlePageSizeChange = (event) => {
         setPageSize(event.target.value);
@@ -73,14 +76,14 @@ export const HomePage = (props) => {
             <Button 
                 style={{ zIndex: 10, position: 'absolute', top: 20, left: 20 }} 
                 variant="contained" color="secondary" 
-                onClick={() => props.onRouteChange('login')}
+                onClick={() => props.logout()}
             >
                 Logout
             </Button>
             <Button 
                 style={{ zIndex: 10, position: 'absolute', top: 20, right: 20 }} 
                 variant="contained" color="secondary" 
-                onClick={() => props.onRouteChange('auction-form')}
+                onClick={() => navigate('/auction-form')}
             >
                 Add new auction
             </Button>
@@ -104,7 +107,7 @@ export const HomePage = (props) => {
                     </TableHead>
                     <TableBody>
                         {data.auctionDashboardViews.map((item) => (
-                            <TableRow key={item.id} onClick={() => props.onAuctionClicked(item.id)}>
+                            <TableRow key={item.id} onClick={() => navigate(`/auctions/${item.id}`)}>
                                 <TableCell>{item.id}</TableCell>
                                 <TableCell>{item.title}</TableCell>
                                 <TableCell>{item.creationDate}</TableCell>

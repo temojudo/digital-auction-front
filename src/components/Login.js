@@ -1,4 +1,5 @@
 import React, { useState } from "react"
+import { useNavigate } from 'react-router-dom';
 
 
 export const Login = (props) => {
@@ -6,6 +7,8 @@ export const Login = (props) => {
     const [pass, setPass] = useState('')
 
     const [errorMessage, setErrorMessage] = useState('')
+
+    const navigate = useNavigate();
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -24,13 +27,13 @@ export const Login = (props) => {
 
                 response.json()
                     .then(data => {
-                        props.loadUser(data)
-                        props.onRouteChange('home')
+                        props.loadUser(data);
+                        navigate('/home');
                     })
             } if (response.status === 400 || response.status === 403 || response.status === 404) {
-                setErrorMessage('Invalid credentials')
+                setErrorMessage('Invalid credentials');
             } else {
-                setErrorMessage(`error occured status code [${response.status}]`)
+                setErrorMessage(`error occured status code [${response.status}]`);
             }
         })
     }
@@ -46,7 +49,7 @@ export const Login = (props) => {
                 <input value={pass} onChange={(e) => setPass(e.target.value)} type="password" placeholder="********" id="password" name="password" />
                 <button className="login-register-btn" type="submit">Log In</button>
             </form>
-            <button className="link-btn" onClick={() => props.onRouteChange('register')}>Don't have an account? Register here.</button>
+            <button className="link-btn" onClick={() => navigate('/register')}>Don't have an account? Register here.</button>
         </div>
     )
 }

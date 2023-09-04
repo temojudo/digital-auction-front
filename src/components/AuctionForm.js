@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import InputLabel from '@mui/material/InputLabel';
 import Input from '@mui/material/Input';
@@ -14,6 +15,8 @@ export const AuctionForm = (props) => {
         startingBid: '',
         image: null,
     });
+
+    const navigate = useNavigate();
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -65,6 +68,7 @@ export const AuctionForm = (props) => {
 
                 if (auctionResponse.ok) {
                     alert('Auction added successfully!');
+                    navigate('/home');
                 } else {
                     alert('Failed to add auction');
                 }
@@ -81,14 +85,14 @@ export const AuctionForm = (props) => {
             <Button 
                 style={{ zIndex: 10, position: 'absolute', top: 20, left: 20 }} 
                 variant="contained" color="secondary" 
-                onClick={() => props.onRouteChange('login')}
+                onClick={() => props.logout()}
             >
                 Logout
             </Button>
             <Button 
                 style={{ zIndex: 10, position: 'absolute', top: 20, right: 20 }} 
                 variant="contained" color="secondary" 
-                onClick={() => props.onRouteChange('home')}
+                onClick={() => navigate('/home')}
             >
                 Dashboard
             </Button>

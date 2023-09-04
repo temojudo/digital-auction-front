@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import { Login } from './components/Login';
 import { Register } from './components/Register';
 import { HomePage } from './components/HomePage';
@@ -7,73 +8,61 @@ import { AuctionForm } from './components/AuctionForm';
 import './App.css';
 
 
-const intialState = {
-    route: 'login',
-	auctionId: 0,
-	firstname: '',
-	lastname: '',
-	username: '',
-	personalNumber: '',
-	bidCount: 0,
-	jwt: ''
-};
+const App = () => {
+    const navigate = useNavigate();
 
-class App extends Component {
-	constructor() {
-		super();
-		this.state = intialState;
+	const initialUserData = JSON.parse(localStorage.getItem('userData')) || {
+		firstname: '',
+		lastname: '',
+		username: '',
+		personalNumber: '',
+		bidCount: 0,
+		jwt: '',
 	};
+	const [state, setState] = useState(initialUserData);
 
-	loadUser = (data) => {
-        this.setState({
+	useEffect(() => {
+		localStorage.setItem('userData', JSON.stringify(state));
+	}, [state]);
+
+	const loadUser = (data) => {
+        setState({
 			firstname: data.userInfo.firstname,
 			lastname: data.userInfo.lastname,
 			username: data.userInfo.username,
 			personalNumber: data.userInfo.personalNumber,
 			bidCount: data.userInfo.bidCount,
 			jwt: data.jwt
-        })
+        });
+
+		navigate('/home');
     };
-	
-	onRouteChange = (route) => {
-        this.setState({ route: route });
+
+	const logout = () => {
+		setState({
+			firstname: '',
+			lastname: '',
+			username: '',
+			personalNumber: '',
+			bidCount: 0,
+			jwt: '',
+		});
+		localStorage.removeItem('userData');
+
+		navigate('/');
 	};
 
-	onInputChange = (event) => {
-        this.setState({ input: event.target.value });
-	};
-
-	onAuctionClicked = (auctionId) => {
-        this.setState({ auctionId: auctionId });
-
-		this.onRouteChange('auction')
-	};
-
-	render() {
-		const { route } = this.state;
-		return (
-			<div className="App">
-				{
-					route === 'login' ?
-						<Login loadUser={this.loadUser} onRouteChange={this.onRouteChange} />
-					:
-					route === 'register' ?
-						<Register loadUser={this.loadUser} onRouteChange={this.onRouteChange} />
-					:
-					route === 'home' ?
-						<HomePage state={this.state} onRouteChange={this.onRouteChange} onAuctionClicked={this.onAuctionClicked} />
-					:
-					route === 'auction' ?
-						<AuctionPage state={this.state} onRouteChange={this.onRouteChange} onAuctionClicked={this.onAuctionClicked} />
-					:
-					route === 'auction-form' ?
-						<AuctionForm state={this.state} onRouteChange={this.onRouteChange} />
-					:
-					<></>
-				}
-			</div>
-		);
-	}
-}
+	return (
+		<div className="App">
+			<Routes>
+				<Route path="/" element={<Login loadUser={loadUser} />} />
+				<Route path="/register" element={<Register loadUser={loadUser} />} />
+				<Route path="/home" element={<HomePage state={state} logout={logout} />} />
+				<Route path="/auctions/:auctionId" element={<AuctionPage state={state} logout={logout} />} />
+				<Route path="/auction-form" element={<AuctionForm state={state} logout={logout} />} />
+			</Routes>
+		</div>
+	);
+};
 
 export default App;

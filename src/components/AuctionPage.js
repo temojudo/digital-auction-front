@@ -1,14 +1,19 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import {useParams} from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 import WebSocketService from '../websocket/WebSocketService';
 import Button from '@mui/material/Button';
 
 
 export const AuctionPage = (props) => {
-    const { jwt, auctionId } = props.state;
+    const { auctionId } = useParams()
+    const { jwt } = props.state;
     const [auctionInfo, setAuctionInfo] = useState({});
     const [bidAmount, setBidAmount] = useState(0);
     const [currentBid, setCurrentBid] = useState(0);
     const [imageSrc, setImageSrc] = useState('');
+
+    const navigate = useNavigate();
 
     const webSocketService = useMemo(() => new WebSocketService(props.state.jwt), [props.state.jwt]);
 
@@ -37,7 +42,7 @@ export const AuctionPage = (props) => {
         })
         .catch((error) => console.error('Error fetching image:', error));
 
-        webSocketService.connect(auctionId, onBidChange);
+        webSocketService.connect(auctionId, onBidChange, onAuctionFinished);
 
         return () => {
             webSocketService.disconnect();
@@ -46,6 +51,10 @@ export const AuctionPage = (props) => {
 
     const onBidChange = (newBid) => {
         setCurrentBid(newBid);
+    };
+
+    const onAuctionFinished = () => {
+        alert('Auction finished, refresh to see winner');
     };
 
     const handleBidChange = (e) => {
@@ -62,12 +71,13 @@ export const AuctionPage = (props) => {
             <Button 
                 style={{ zIndex: 10, position: 'absolute', top: 20, left: 20 }} 
                 variant="contained" color="secondary" 
-                onClick={() => props.onRouteChange('home')}
+                onClick={() => navigate('/home')}
             >
                 Back
             </Button>
             <h1>{auctionInfo.title}</h1>
             <h2>{auctionInfo.description}</h2>
+            <h3>start date - {auctionInfo.startDate}</h3>
             <img src={imageSrc} height={300} alt="Auction Item" />
 
             <div>

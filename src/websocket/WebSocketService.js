@@ -11,7 +11,7 @@ class WebSocketService {
         this.jwt = jwt;
     }
 
-    connect(auctionId, onBidChange) {
+    connect(auctionId, onBidChange, onAuctionFinished) {
         const socket = new SockJS(SOCKET_URL);
         this.stompClient = Stomp.over(socket);
 
@@ -24,6 +24,10 @@ class WebSocketService {
                     const payload = JSON.parse(message.body);
                     console.log("payload", payload)
                     onBidChange(payload.bidValue);
+                });
+
+                this.stompClient.subscribe(`${topic}/finished`, () => {
+                    onAuctionFinished();
                 });
             }
         });
