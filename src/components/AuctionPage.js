@@ -67,6 +67,7 @@ export const AuctionPage = (props) => {
                 Back
             </Button>
             <h1>{auctionInfo.title}</h1>
+            <h2>{auctionInfo.description}</h2>
             <img src={imageSrc} height={300} alt="Auction Item" />
 
             <div>
@@ -77,7 +78,7 @@ export const AuctionPage = (props) => {
                     value={bidAmount}
                     onChange={handleBidChange}
                 />
-                <button onClick={placeBid}>Place Bid</button>
+                <Button onClick={placeBid}>Place Bid</Button>
             </div>
         </div>
     );
