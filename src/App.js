@@ -3,6 +3,7 @@ import { Login } from './components/Login';
 import { Register } from './components/Register';
 import { HomePage } from './components/HomePage';
 import { AuctionPage } from './components/AuctionPage';
+import { AuctionForm } from './components/AuctionForm';
 import './App.css';
 
 
@@ -64,6 +65,9 @@ class App extends Component {
 					:
 					route === 'auction' ?
 						<AuctionPage state={this.state} onRouteChange={this.onRouteChange} onAuctionClicked={this.onAuctionClicked} />
+					:
+					route === 'auction-form' ?
+						<AuctionForm state={this.state} onRouteChange={this.onRouteChange} />
 					:
 					<></>
 				}

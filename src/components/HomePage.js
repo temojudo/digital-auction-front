@@ -44,10 +44,10 @@ export const HomePage = (props) => {
             }
         })
         .then((response) => {
-        setData(response.data);
+            setData(response.data);
         })
         .catch((error) => {
-        console.error('Error fetching data:', error);
+            console.error('Error fetching data:', error);
         });
     }, [pageSize, pageNumber, jwt]);
 
@@ -71,11 +71,18 @@ export const HomePage = (props) => {
     return (
         <div>
             <Button 
-                style={{ zIndex: 10, position: 'absolute', top: 20, right: 20 }} 
+                style={{ zIndex: 10, position: 'absolute', top: 20, left: 20 }} 
                 variant="contained" color="secondary" 
                 onClick={() => props.onRouteChange('login')}
             >
                 Logout
+            </Button>
+            <Button 
+                style={{ zIndex: 10, position: 'absolute', top: 20, right: 20 }} 
+                variant="contained" color="secondary" 
+                onClick={() => props.onRouteChange('auction-form')}
+            >
+                Add new auction
             </Button>
             <div className='dashboardPageUserInfo' >
                 <h1>Dashboard</h1>
