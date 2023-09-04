@@ -10,27 +10,30 @@ export const AuctionPage = (props) => {
     const [currentBid, setCurrentBid] = useState(0);
     const [imageSrc, setImageSrc] = useState('');
 
-    const webSocketService = useMemo(() => new WebSocketService(), []);
+    const webSocketService = useMemo(() => new WebSocketService(props.state.jwt), [props.state.jwt]);
 
     useEffect(() => {
         fetch(`http://localhost:8080/auctions/${auctionId}`)
             .then((response) => response.json())
-            .then((data) => setAuctionInfo(data.auctionInfo))
+            .then((data) => {
+                setCurrentBid(data.auctionInfo.currentBid);
+                setAuctionInfo(data.auctionInfo);
+            })
             .catch((error) => console.error('Error fetching auction info:', error));
 
         fetch(`http://localhost:8080/images/download/${auctionInfo.photoId}`)
             .then((response) => response.blob())
             .then((blob) => {
-            const imageUrl = URL.createObjectURL(blob);
-            setImageSrc(imageUrl);
+                const imageUrl = URL.createObjectURL(blob);
+                setImageSrc(imageUrl);
             })
             .catch((error) => console.error('Error fetching image:', error));
 
         webSocketService.connect(auctionId, onBidChange);
 
-        // return () => {
-        //     webSocketService.disconnect();
-        // };
+        return () => {
+            webSocketService.disconnect();
+        };
     }, [auctionId, auctionInfo.photoId, webSocketService]);
 
     const onBidChange = (newBid) => {
@@ -42,9 +45,7 @@ export const AuctionPage = (props) => {
     };
 
     const placeBid = () => {
-        const newBidCount = currentBid + parseFloat(bidAmount);
-        setCurrentBid(newBidCount);
-
+        const newBidCount = parseFloat(bidAmount);
         webSocketService.placeBid(auctionId, newBidCount);
     };
 
@@ -54,7 +55,7 @@ export const AuctionPage = (props) => {
                 <button onClick={() => props.onRouteChange('home')}>Back</button>
             </div>
             <h1>{auctionInfo.title}</h1>
-            <img src={imageSrc} alt="Auction Item" />
+            <img src={imageSrc} height={300} alt="Auction Item" />
 
             <div>
                 <p>Current Bid: {currentBid}</p>

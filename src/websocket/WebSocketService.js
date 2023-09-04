@@ -6,8 +6,9 @@ const SOCKET_URL = 'http://localhost:8080/ws';
 const TOPIC_PREFIX = '/topic/auctions/';
 
 class WebSocketService {
-    constructor() {
+    constructor(jwt) {
         this.stompClient = null;
+        this.jwt = jwt;
     }
 
     connect(auctionId, onBidChange) {
@@ -18,20 +19,23 @@ class WebSocketService {
 
         this.stompClient.connect({}, () => {
             const topic = `${TOPIC_PREFIX}${auctionId}`;
-            this.stompClient.subscribe(topic, (message) => {
-                const payload = JSON.parse(message.body);
-                onBidChange(payload.bidCount);
-            });
+            if (this.stompClient.connected) {
+                this.stompClient.subscribe(topic, (message) => {
+                    const payload = JSON.parse(message.body);
+                    console.log("payload", payload)
+                    onBidChange(payload.bidValue);
+                });
+            }
         });
     }
 
     placeBid(auctionId, bidCount) {
         const topic = `/app/auctions/${auctionId}/placeBid`;
-        this.stompClient.send(topic, {}, JSON.stringify({ bidCount }));
+        this.stompClient.send(topic, {}, JSON.stringify({ bidValue: bidCount, userJwt: this.jwt }));
     }
 
     disconnect() {
-        if (this.stompClient) {
+        if (this.stompClient && this.stompClient.connected) {
             this.stompClient.disconnect();
         }
     }
