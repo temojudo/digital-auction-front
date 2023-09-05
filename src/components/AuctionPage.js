@@ -13,7 +13,7 @@ export const AuctionPage = (props) => {
     const [currentBid, setCurrentBid] = useState(0);
     const [imageSrc, setImageSrc] = useState('');
     const [winnerMessageColor, setWinnerMessageColor] = useState('');
-    const [counter, setCounter] = useState(60);
+    const [counter, setCounter] = useState(0);
 
     const navigate = useNavigate();
 
@@ -32,11 +32,17 @@ export const AuctionPage = (props) => {
             const currentTimestamp = (new Date()).getTime();
             const startDateTimestamp = (new Date(auctionInfo.startDate)).getTime();
 
-            setCounter(Math.floor((startDateTimestamp - currentTimestamp) / 1000));
+            setCounter(Math.floor((startDateTimestamp - currentTimestamp) / 1000) + 18);
             auctionInfo.initialTimestampSetted = true;
         }
 
-        setTimeout(() => setCounter(counter - 1), 1000);
+        const intervalId = setInterval(() => {
+            counter > 0 && setCounter(counter - 1);
+        }, 1000);
+
+        return () => {
+            clearInterval(intervalId);
+        }
     }, [counter, auctionInfo]);
 
     useEffect(() => {
@@ -73,9 +79,11 @@ export const AuctionPage = (props) => {
 
     const onBidChange = (newBid) => {
         setCurrentBid(newBid);
+        setCounter(18);
     };
 
     const onAuctionFinished = () => {
+        setCounter(0);
         alert('Auction finished, refresh to see winner');
     };
 
