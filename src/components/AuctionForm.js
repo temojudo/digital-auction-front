@@ -11,7 +11,7 @@ export const AuctionForm = (props) => {
     const [formData, setFormData] = useState({
         title: '',
         description: '',
-        startDateUtc: '',
+        startDate: '',
         startingBid: '',
         image: null,
     });
@@ -48,8 +48,7 @@ export const AuctionForm = (props) => {
 
             if (imageResponse.ok) {
                 const { imageId } = await imageResponse.json();
-
-                console.log("photoId", imageId)
+                const startDate = new Date(formData.startDate);
 
                 const auctionResponse = await fetch('http://localhost:8080/auctions/register', {
                     method: 'POST',
@@ -62,7 +61,7 @@ export const AuctionForm = (props) => {
                         title: formData.title,
                         description: formData.description,
                         photoId: imageId,
-                        startDateUtc: formData.startDateUtc,
+                        startDateUtc: startDate,
                     }),
                 });
 
@@ -106,8 +105,8 @@ export const AuctionForm = (props) => {
                     <Input type="text" name="description" value={formData.description} onChange={handleInputChange} required />
                 </div>
                 <div>
-                    <InputLabel>Start Date (UTC):</InputLabel>
-                    <Input type="datetime-local" name="startDateUtc" value={formData.startDateUtc} onChange={handleInputChange} required />
+                    <InputLabel>Start Date:</InputLabel>
+                    <Input type="datetime-local" name="startDate" value={formData.startDate} onChange={handleInputChange} required />
                 </div>
                 <div>
                     <InputLabel>Starting Bid:</InputLabel>
