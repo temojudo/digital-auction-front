@@ -13,11 +13,31 @@ export const AuctionPage = (props) => {
     const [currentBid, setCurrentBid] = useState(0);
     const [imageSrc, setImageSrc] = useState('');
     const [winnerMessageColor, setWinnerMessageColor] = useState('');
-    const [timeLeft, setTimeLeft] = useState(null);
+    const [counter, setCounter] = useState(60);
 
     const navigate = useNavigate();
 
     const webSocketService = useMemo(() => new WebSocketService(props.state.jwt), [props.state.jwt]);
+
+    useEffect(() => {
+        webSocketService.connect(auctionId, onBidChange, onAuctionFinished);
+
+        return () => {
+            webSocketService.disconnect();
+        };
+    }, [webSocketService, auctionId]);
+
+    useEffect(() => {
+        if (auctionInfo.status === 'CREATED' && !auctionInfo.initialTimestampSetted) {
+            const currentTimestamp = (new Date()).getTime();
+            const startDateTimestamp = (new Date(auctionInfo.startDate)).getTime();
+
+            setCounter(Math.floor((startDateTimestamp - currentTimestamp) / 1000));
+            auctionInfo.initialTimestampSetted = true;
+        }
+
+        setTimeout(() => setCounter(counter - 1), 1000);
+    }, [counter, auctionInfo]);
 
     useEffect(() => {
         fetch(`http://localhost:8080/auctions/${auctionId}`, {
@@ -49,39 +69,7 @@ export const AuctionPage = (props) => {
             setImageSrc(imageUrl);
         })
         .catch((error) => console.error('Error fetching image:', error));
-
-        webSocketService.connect(auctionId, onBidChange, onAuctionFinished);
-
-        const updateRemainingTime = () => {
-            if (auctionInfo.status === 'CREATED') {
-                const startDate = new Date(auctionInfo.startDate);
-                const now = new Date();
-                const timeDifference = startDate - now;
-
-                if (timeDifference > 0) {
-                    const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-                    const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                    const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
-                    const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
-
-                    const timeLeftString = `${days}d ${hours}h ${minutes}m ${seconds}s`;
-
-                    setTimeLeft(timeLeftString);
-                } else {
-                    clearInterval(intervalId); // Stop updating when the auction ends
-                    setTimeLeft('Auction has ended');
-                }
-            }
-        };
-
-        updateRemainingTime();
-        const intervalId = setInterval(updateRemainingTime, 1000);
-
-        return () => {
-            webSocketService.disconnect();
-            clearInterval(intervalId);
-        };
-    }, [auctionId, jwt, username, auctionInfo.status, auctionInfo.startDate, auctionInfo.photoId, webSocketService]);
+    }, [auctionId, jwt, username, auctionInfo.status, auctionInfo.startDate, auctionInfo.photoId]);
 
     const onBidChange = (newBid) => {
         setCurrentBid(newBid);
@@ -114,7 +102,7 @@ export const AuctionPage = (props) => {
             <h3>start date - {auctionInfo.startDate}</h3>
             {auctionInfo.status === 'CREATED' && (
                 <div>
-                    <p>Time Left: {timeLeft}</p>
+                    <p>Time Left: {counter}</p>
                 </div>
             )}
             <img src={imageSrc} height={300} alt="Auction Item" />
