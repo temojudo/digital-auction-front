@@ -9,10 +9,9 @@
 }
 
 .dashboardPageUserInfo {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  right: 20px;
+  position: relative;
+  margin-top: 20px;
+  margin-bottom: 20px;
   align-items: center;
   justify-content: center;
 }
