@@ -110,7 +110,7 @@ export const AuctionPage = (props) => {
             <h3>start date - {auctionInfo.startDate}</h3>
             {auctionInfo.status === 'CREATED' && (
                 <div>
-                    <p>Time Left: {counter}</p>
+                    <p style={{color: `${(counter <= 20) ? 'green' : 'red'}`}}>Time Left: {counter}</p>
                 </div>
             )}
             <img src={imageSrc} height={300} alt="Auction Item" />
