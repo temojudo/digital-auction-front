@@ -109,7 +109,6 @@ export const HomePage = (props) => {
             <div className='dashboardPageUserInfo' >
                 <h1>Dashboard</h1>
                 <p>Welcome, {firstname} {lastname}</p>
-                <p>Current bid count: {bidCount}</p>
             </div>
             <div>
                 <FormControl component="fieldset">
