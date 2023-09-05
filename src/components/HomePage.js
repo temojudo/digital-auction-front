@@ -26,6 +26,7 @@ export const HomePage = (props) => {
 
     const [pageSize, setPageSize] = useState(5);
     const [pageNumber, setPageNumber] = useState(1);
+    const [statusFilter, setStatusFilter] = useState('CREATED');
 
     const navigate = useNavigate();
 
@@ -39,7 +40,11 @@ export const HomePage = (props) => {
     };
 
     useEffect(() => {
-        const apiUrl = `http://localhost:8080/auctions/dashboard?pageInfo=true&pageSize=${pageSize}&pageNumber=${pageNumber - 1}`;
+        let apiUrl = `http://localhost:8080/auctions/dashboard?pageInfo=true&pageSize=${pageSize}&pageNumber=${pageNumber - 1}&sortBy=START_DATE`;
+
+        if (statusFilter !== 'ALL') {
+            apiUrl = `${apiUrl}&status=${statusFilter}`
+        }
 
         axios.get(apiUrl, {
             headers: {
@@ -52,7 +57,7 @@ export const HomePage = (props) => {
         .catch((error) => {
             console.error('Error fetching data:', error);
         });
-    }, [pageSize, pageNumber, jwt]);
+    }, [pageSize, pageNumber, statusFilter, jwt]);
 
     const renderPageNumbers = () => {
         const pages = [];
@@ -141,7 +146,7 @@ export const HomePage = (props) => {
             </div>
             <br />
             <div>
-                <FormControl>
+                <FormControl style={{ minWidth: '100px' }}>
                     <InputLabel>Page Size</InputLabel>
                     <Select
                         value={pageSize}
@@ -150,6 +155,17 @@ export const HomePage = (props) => {
                         <MenuItem value={5}>5</MenuItem>
                         <MenuItem value={10}>10</MenuItem>
                         <MenuItem value={20}>20</MenuItem>
+                    </Select>
+                </FormControl>
+                <FormControl style={{ minWidth: '150px' }}>
+                    <InputLabel>Status Filter</InputLabel>
+                    <Select
+                        value={statusFilter}
+                        onChange={(e) => setStatusFilter(e.target.value)}
+                    >
+                        <MenuItem value="ALL">All</MenuItem>
+                        <MenuItem value="CREATED">Created</MenuItem>
+                        <MenuItem value="FINISHED">Finished</MenuItem>
                     </Select>
                 </FormControl>
             </div>
