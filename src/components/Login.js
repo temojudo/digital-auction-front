@@ -41,12 +41,12 @@ export const Login = (props) => {
     return (
         <div className="auth-form-container">
             <h2>Login</h2>
-            <h3>{errorMessage}</h3>
+            <h3 style={{maxWidth: 300}}>{errorMessage}</h3>
             <form className="login-form" onSubmit={handleSubmit}>
                 <label htmlFor="username">username</label>
-                <input value={username} onChange={(e) => setUsername(e.target.value)} type="text" placeholder="username" id="username" name="username" />
+                <input value={username} onChange={(e) => setUsername(e.target.value)} type="text" placeholder="username" id="username" name="username" required />
                 <label htmlFor="password">password</label>
-                <input value={pass} onChange={(e) => setPass(e.target.value)} type="password" placeholder="********" id="password" name="password" />
+                <input value={pass} onChange={(e) => setPass(e.target.value)} type="password" placeholder="********" id="password" name="password" required />
                 <button className="login-register-btn" type="submit">Log In</button>
             </form>
             <button className="link-btn" onClick={() => navigate('/register')}>Don't have an account? Register here.</button>
