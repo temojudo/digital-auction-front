@@ -13,9 +13,13 @@ import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+
 
 export const HomePage = (props) => {
-    const { firstname, lastname, bidCount, jwt } = props.state;
+    const { username, firstname, lastname, bidCount, jwt } = props.state;
 
     const [data, setData] = useState({
         itemCount: 0,
@@ -27,6 +31,7 @@ export const HomePage = (props) => {
     const [pageSize, setPageSize] = useState(5);
     const [pageNumber, setPageNumber] = useState(1);
     const [statusFilter, setStatusFilter] = useState('CREATED');
+    const [myAuctions, setMyAuctions] = useState(false);
 
     const navigate = useNavigate();
 
@@ -39,11 +44,20 @@ export const HomePage = (props) => {
         setPageNumber(newPageNumber);
     };
 
+    const handleRadioChange = (event) => {
+        setMyAuctions(event.target.value === 'myAuctions');
+        setPageNumber(1);
+    };
+
     useEffect(() => {
         let apiUrl = `http://localhost:8080/auctions/dashboard?pageInfo=true&pageSize=${pageSize}&pageNumber=${pageNumber - 1}&sortBy=START_DATE`;
 
         if (statusFilter !== 'ALL') {
             apiUrl = `${apiUrl}&status=${statusFilter}`
+        }
+
+        if (myAuctions) {
+            apiUrl = `${apiUrl}&registrationUsername=${username}`
         }
 
         axios.get(apiUrl, {
@@ -57,7 +71,7 @@ export const HomePage = (props) => {
         .catch((error) => {
             console.error('Error fetching data:', error);
         });
-    }, [pageSize, pageNumber, statusFilter, jwt]);
+    }, [pageSize, pageNumber, statusFilter, myAuctions, username, jwt]);
 
     const renderPageNumbers = () => {
         const pages = [];
@@ -96,6 +110,28 @@ export const HomePage = (props) => {
                 <h1>Dashboard</h1>
                 <p>Welcome, {firstname} {lastname}</p>
                 <p>Current bid count: {bidCount}</p>
+            </div>
+            <div>
+                <FormControl component="fieldset">
+                    <RadioGroup
+                        aria-label="auctionFilter"
+                        name="auctionFilter"
+                        value={myAuctions ? 'myAuctions' : 'allAuctions'}
+                        onChange={handleRadioChange}
+                        row
+                    >
+                        <FormControlLabel
+                            value="myAuctions"
+                            control={<Radio />}
+                            label="My Auctions"
+                        />
+                        <FormControlLabel
+                            value="allAuctions"
+                            control={<Radio />}
+                            label="All Auctions"
+                        />
+                    </RadioGroup>
+                </FormControl>
             </div>
             <br />
             <TableContainer component={Paper}>
