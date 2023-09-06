@@ -46,6 +46,11 @@ export const HomePage = (props) => {
 
     const handleRadioChange = (event) => {
         setAuctionType(event.target.value);
+
+        if (event.target.value === 'wonByMe') {
+            setStatusFilter('FINISHED');
+        }
+
         setPageNumber(1);
     };
 
