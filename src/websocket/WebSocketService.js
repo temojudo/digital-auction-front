@@ -15,14 +15,11 @@ class WebSocketService {
         const socket = new SockJS(SOCKET_URL);
         this.stompClient = Stomp.over(socket);
 
-        console.log("this.stompClient", this.stompClient);
-
         this.stompClient.connect({}, () => {
             const topic = `${TOPIC_PREFIX}${auctionId}`;
             if (this.stompClient.connected) {
                 this.stompClient.subscribe(topic, (message) => {
                     const payload = JSON.parse(message.body);
-                    console.log("payload", payload)
                     onBidChange(payload.bidValue);
                 });
 

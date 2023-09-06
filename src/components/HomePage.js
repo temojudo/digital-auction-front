@@ -19,7 +19,7 @@ import RadioGroup from '@mui/material/RadioGroup';
 
 
 export const HomePage = (props) => {
-    const { username, firstname, lastname, bidCount, jwt } = props.state;
+    const { username, firstname, lastname, jwt } = props.state;
 
     const [data, setData] = useState({
         itemCount: 0,
@@ -31,7 +31,7 @@ export const HomePage = (props) => {
     const [pageSize, setPageSize] = useState(5);
     const [pageNumber, setPageNumber] = useState(1);
     const [statusFilter, setStatusFilter] = useState('CREATED');
-    const [myAuctions, setMyAuctions] = useState(false);
+    const [auctionType, setAuctionType] = useState('allAuctions');
 
     const navigate = useNavigate();
 
@@ -45,7 +45,7 @@ export const HomePage = (props) => {
     };
 
     const handleRadioChange = (event) => {
-        setMyAuctions(event.target.value === 'myAuctions');
+        setAuctionType(event.target.value);
         setPageNumber(1);
     };
 
@@ -56,8 +56,10 @@ export const HomePage = (props) => {
             apiUrl = `${apiUrl}&status=${statusFilter}`
         }
 
-        if (myAuctions) {
+        if (auctionType === 'myAuctions') {
             apiUrl = `${apiUrl}&registrationUsername=${username}`
+        } else if (auctionType === 'wonByMe') {
+            apiUrl = `${apiUrl}&buyerUsername=${username}`
         }
 
         axios.get(apiUrl, {
@@ -71,7 +73,7 @@ export const HomePage = (props) => {
         .catch((error) => {
             console.error('Error fetching data:', error);
         });
-    }, [pageSize, pageNumber, statusFilter, myAuctions, username, jwt]);
+    }, [pageSize, pageNumber, statusFilter, auctionType, username, jwt]);
 
     const renderPageNumbers = () => {
         const pages = [];
@@ -115,7 +117,7 @@ export const HomePage = (props) => {
                     <RadioGroup
                         aria-label="auctionFilter"
                         name="auctionFilter"
-                        value={myAuctions ? 'myAuctions' : 'allAuctions'}
+                        value={auctionType}
                         onChange={handleRadioChange}
                         row
                     >
@@ -123,6 +125,11 @@ export const HomePage = (props) => {
                             value="myAuctions"
                             control={<Radio />}
                             label="My Auctions"
+                        />
+                        <FormControlLabel
+                            value="wonByMe"
+                            control={<Radio />}
+                            label="Won by me"
                         />
                         <FormControlLabel
                             value="allAuctions"
